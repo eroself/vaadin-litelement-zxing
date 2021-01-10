@@ -8,15 +8,9 @@ import java.util.Random;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
-public class ZXingVaadinReader extends Component implements HasSize, HasStyle{
+public class ZXingVaadinReader extends Component implements HasSize {
 
     private String value;
-
-    private String zxingStyle;
-
-    private String from;
-
-    private Integer size;
 
     private String id;
 
@@ -48,30 +42,23 @@ public class ZXingVaadinReader extends Component implements HasSize, HasStyle{
         this.value = value;
     }
 
-    public Integer getSize() {
-        return size;
+    @Override
+    public void setWidth(String width) {
+        HasSize.super.setWidth(width);
+        getElement().setProperty("width", width==null ? "100%" : width);
     }
 
-    public void setSize(Integer size) {
-        this.size = size;
-        getElement().setProperty("size", size==null? Integer.valueOf(100): size);
+    @Override
+    public void setHeight(String height) {
+        HasSize.super.setHeight(height);
+        getElement().setProperty("height", height==null ? "100%" : height);
     }
 
-    public String getZxingStyle() {
-        return zxingStyle;
-    }
-
-    public void setZxingStyle(String zxingStyle) {
-        this.zxingStyle = zxingStyle;
-        getElement().setProperty("zxingStyle", zxingStyle);
-    }
-
-    public String getFrom() {
-        return from;
+    public void setStyle(String style) {
+        getElement().setProperty("style", style);
     }
 
     public void setFrom(String from) {
-        this.from = from;
         getElement().setProperty("from", from);
     }
 

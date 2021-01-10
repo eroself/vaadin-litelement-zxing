@@ -6,9 +6,10 @@ class VaadinZXingReader extends LitElement {
 
     static get properties() {
         return { id: String,
-                 size: Number, //square, size of video window / size of generate QR code
-                 from: String, //camera, image, video
-                 zxingStyle: String
+                 width: String,
+                 height: String,
+                 style: String,
+                 from: String
                 };
     }
 
@@ -40,9 +41,9 @@ class VaadinZXingReader extends LitElement {
     render() {
         return html`<video
                       id="${this.id}"
-                      width="${this.size}"
-                      height="${this.size}"
-                      style="${this.zxingStyle}"/>`;
+                      width="${this.width}"
+                      height="${this.height}"
+                      style="${this.style}"/>`;
     }
 
 }
