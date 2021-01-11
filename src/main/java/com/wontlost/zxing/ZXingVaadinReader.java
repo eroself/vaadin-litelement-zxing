@@ -12,6 +12,8 @@ public class ZXingVaadinReader extends Component implements HasSize {
 
     private String value;
 
+    private String error;
+
     private String id;
 
     public ZXingVaadinReader() {
@@ -42,6 +44,11 @@ public class ZXingVaadinReader extends Component implements HasSize {
         this.value = value;
     }
 
+    @ClientCallable
+    private void setError(String error) {
+        this.error = error;
+    }
+
     @Override
     public void setWidth(String width) {
         HasSize.super.setWidth(width);
@@ -55,7 +62,7 @@ public class ZXingVaadinReader extends Component implements HasSize {
     }
 
     public void setStyle(String style) {
-        getElement().setProperty("style", style);
+        getElement().setProperty("zxingStyle", style);
     }
 
     public void setFrom(String from) {

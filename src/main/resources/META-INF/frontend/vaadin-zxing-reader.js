@@ -1,6 +1,6 @@
 import { html, LitElement } from "lit-element";
 import { BrowserQRCodeReader } from '@zxing/browser';
-import '@zxing/library';
+import { NotFoundException } from '@zxing/library';
 
 class VaadinZXingReader extends LitElement {
 
@@ -8,7 +8,7 @@ class VaadinZXingReader extends LitElement {
         return { id: String,
                  width: String,
                  height: String,
-                 style: String,
+                 zxingStyle: String,
                  from: String
                 };
     }
@@ -18,18 +18,37 @@ class VaadinZXingReader extends LitElement {
     }
 
     getDecoder(from, where) {
-        let codeReader = new BrowserQRCodeReader()
-        return from === 'camera' ? codeReader.decodeOnceFromVideoDevice(undefined, where) :
-               from === 'image' ? codeReader.decodeFromImage(undefined, where) :
-               codeReader.decodeFromVideoUrl(where);//defaulted to video url
+        let codeReader = new BrowserQRCodeReader();
+        return from === 'image' ? codeReader.decodeFromImage(undefined, where) :
+               codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
+    }
+
+    videoDevice(codeReader, where){
+        codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
+            if (result) {
+                console.log(result);
+                this.$server.setValue(result.text);
+            }
+            if (err && err.name !== 'NotFoundException') {
+                console.error(err);
+                this.$server.setError(err);
+            }
+        });
     }
 
 
     decode(from, where) {
-        this.getDecoder(from, where).then(result => {
-            console.log(result.text);
-            this.$server.setValue(result.text);
-        }).catch(err => console.error(err));
+        if(from === 'camera') {
+            this.videoDevice(new BrowserQRCodeReader(), where);
+        } else {
+            this.getDecoder(from, where).then(result => {
+                console.log(result.text);
+                this.$server.setValue(result.text);
+            }).catch(err => {
+                console.error(err);
+                this.$server.setError(err);
+            });
+        }
     }
 
     firstUpdated(changedProperties) {
@@ -43,7 +62,7 @@ class VaadinZXingReader extends LitElement {
                       id="${this.id}"
                       width="${this.width}"
                       height="${this.height}"
-                      style="${this.style}"/>`;
+                      style="${this.zxingStyle}"/>`;
     }
 
 }
