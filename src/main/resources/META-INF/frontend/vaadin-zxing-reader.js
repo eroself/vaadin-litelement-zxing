@@ -1,6 +1,5 @@
 import { html, LitElement } from "lit-element";
 import { BrowserQRCodeReader } from '@zxing/browser';
-import { NotFoundException } from '@zxing/library';
 
 class VaadinZXingReader extends LitElement {
 
@@ -8,8 +7,23 @@ class VaadinZXingReader extends LitElement {
         return { id: String,
                  width: String,
                  height: String,
+                 from: String,
                  zxingStyle: String,
-                 from: String
+                 zxingData:{
+                     type: String,
+                     hasChanged(newVal, oldVal) {
+                         if (newVal !== oldVal) {
+                             console.log(`${newVal} != ${oldVal}. hasChanged: true.`);
+                             if(window.changeServer !== undefined) {
+                                 window.changeServer.setZxingData(newVal);
+                             }
+                             return true;
+                         } else {
+                             console.log(`${newVal} == ${oldVal}. hasChanged: false.`);
+                             return false;
+                         }
+                     }
+                 }
                 };
     }
 
@@ -23,15 +37,15 @@ class VaadinZXingReader extends LitElement {
                codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
     }
 
-    videoDevice(codeReader, where){
-        codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
+    videoDevice(where){
+        new BrowserQRCodeReader().decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
-                console.log(result);
-                this.$server.setValue(result.text);
+                this.zxingData = result.text;
+                window.changeServer = this.$server;
             }
-            if (err && err.name !== 'NotFoundException') {
+            if (err && err.name !== 'NotFoundException' && err.name !== 'ChecksumException') {
                 console.error(err);
-                this.$server.setError(err);
+                this.$server.setZxingError(err);
             }
         });
     }
@@ -39,10 +53,11 @@ class VaadinZXingReader extends LitElement {
 
     decode(from, where) {
         if(from === 'camera') {
-            this.videoDevice(new BrowserQRCodeReader(), where);
+            this.videoDevice(where);
         } else {
             this.getDecoder(from, where).then(result => {
                 console.log(result.text);
+                this.zxingData = result.text;
                 this.$server.setValue(result.text);
             }).catch(err => {
                 console.error(err);
@@ -51,8 +66,9 @@ class VaadinZXingReader extends LitElement {
         }
     }
 
-    firstUpdated(changedProperties) {
+    updated(changedProperties) {
         super.updated(changedProperties);
+        console.log("updated")
         let where = document.querySelector("#"+this.id);
         this.decode(this.from, where);
     }

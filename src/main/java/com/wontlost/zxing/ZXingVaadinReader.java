@@ -1,6 +1,7 @@
 package com.wontlost.zxing;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.dependency.JsModule;
 
 import java.util.Optional;
@@ -8,11 +9,11 @@ import java.util.Random;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
-public class ZXingVaadinReader extends Component implements HasSize {
+public class ZXingVaadinReader extends CustomField<String> {
 
-    private String value;
+    private String zxingData;
 
-    private String error;
+    private String zxingError;
 
     private String id;
 
@@ -22,6 +23,16 @@ public class ZXingVaadinReader extends Component implements HasSize {
 
     public ZXingVaadinReader(String id) {
         setId(id);
+    }
+
+    @Override
+    protected String generateModelValue() {
+        return zxingData;
+    }
+
+    @Override
+    protected void setPresentationValue(String newPresentationValue) {
+        this.zxingData = newPresentationValue;
     }
 
     @Override
@@ -36,28 +47,49 @@ public class ZXingVaadinReader extends Component implements HasSize {
     }
 
     public String getValue() {
-        return value;
+        return zxingData;
+    }
+
+    public void setValue(String zxingData) {
+        super.setValue(zxingData);
+        this.zxingData = zxingData;
+        getElement().setProperty("zxingData", zxingData);
+    }
+
+    protected void setModelValue(String value, boolean fromClient){
+        super.setModelValue(value, fromClient);
+        String oldEditorData = this.zxingData;
+        this.zxingData = value;
+        fireEvent(new ComponentValueChangeEvent<>(this, this, oldEditorData, fromClient));
     }
 
     @ClientCallable
-    private void setValue(String value) {
-        this.value = value;
+    private void setZxingData(String zxingData) {
+        setModelValue(zxingData, true);
     }
 
     @ClientCallable
-    private void setError(String error) {
-        this.error = error;
+    private void setZxingError(String error) {
+        this.zxingError = error;
     }
 
     @Override
     public void setWidth(String width) {
-        HasSize.super.setWidth(width);
+        super.setWidth(width);
         getElement().setProperty("width", width==null ? "100%" : width);
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        //do nothing
+    }
+
+    public boolean isReadOnly() {
+        return true;
     }
 
     @Override
     public void setHeight(String height) {
-        HasSize.super.setHeight(height);
+        super.setHeight(height);
         getElement().setProperty("height", height==null ? "100%" : height);
     }
 
