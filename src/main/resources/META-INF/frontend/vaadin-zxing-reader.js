@@ -1,13 +1,22 @@
 import { html, LitElement } from "lit-element";
-import { BrowserQRCodeReader } from '@zxing/browser';
+import * as ZXing from "@zxing/library";
 
 class VaadinZXingReader extends LitElement {
+
+    constructor() {
+        super();
+        this.zxingData = '';
+        this.excludes = ['NotFoundException', 'ChecksumException', 'FormatException'];
+        this.codeReader = new ZXing.BrowserMultiFormatReader();
+    }
 
     static get properties() {
         return { id: String,
                  width: String,
                  height: String,
                  from: String,
+                 codeReader: Object,
+                 excludes: Array,
                  zxingStyle: String,
                  zxingData:{
                      type: String,
@@ -32,18 +41,48 @@ class VaadinZXingReader extends LitElement {
     }
 
     getDecoder(from, where) {
-        let codeReader = new BrowserQRCodeReader();
-        return from === 'image' ? codeReader.decodeFromImage(undefined, where) :
-               codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
+        return from === 'image' ? this.codeReader.decodeFromImage(undefined, where) :
+               this.codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
     }
 
     videoDevice(where){
-        new BrowserQRCodeReader().decodeFromVideoDevice(undefined, where, (result, err) => {
+        this.codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
                 this.zxingData = result.text;
-                window.changeServer = this.$server;
+                if(window.changeServer === undefined) {
+                    window.changeServer = this.$server;
+                    this.$server.setZxingData(result.text);
+                }
+
             }
-            if (err && err.name !== 'NotFoundException' && err.name !== 'ChecksumException') {
+
+            // if (err) {
+            //     // As long as this error belongs into one of the following categories
+            //     // the code reader is going to continue as excepted. Any other error
+            //     // will stop the decoding loop.
+            //     //
+            //     // Excepted Exceptions:
+            //     //
+            //     //  - NotFoundException
+            //     //  - ChecksumException
+            //     //  - FormatException
+            //
+            //     if (err instanceof Zxing.NotFoundException) {
+            //         console.log('No QR code found.');
+            //         this.$server.setZxingError(err);
+            //     }
+            //
+            //     if (err instanceof Zxing.ChecksumException) {
+            //         console.log('A code was found, but it\'s read value was not valid.')
+            //
+            //     }
+            //
+            //     if (err instanceof Zxing.FormatException) {
+            //         console.log('A code was found, but it was in a invalid format.')
+            //     }
+            // }
+
+            if (err && !this.excludes.includes(err.name)) {
                 console.error(err);
                 this.$server.setZxingError(err);
             }
@@ -67,6 +106,7 @@ class VaadinZXingReader extends LitElement {
     }
 
     updated(changedProperties) {
+        window.changeServer = this.$server;
         super.updated(changedProperties);
         console.log("updated")
         let where = document.querySelector("#"+this.id);
