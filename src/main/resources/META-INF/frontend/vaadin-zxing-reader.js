@@ -5,7 +5,6 @@ class VaadinZXingReader extends LitElement {
 
     constructor() {
         super();
-        this.zxingData = '';
         this.excludes = ['NotFoundException', 'ChecksumException', 'FormatException'];
         this.codeReader = new ZXing.BrowserMultiFormatReader();
     }
@@ -73,6 +72,7 @@ class VaadinZXingReader extends LitElement {
         } else {
             this.getDecoder(from, where).then(result => {
                 this.zxingData = result.text;
+                console.log("***************"+this.zxingData);
                 this.windowServer(result);
             }).catch(err => {
                 this.$server.setZxingError(err);
@@ -95,7 +95,6 @@ class VaadinZXingReader extends LitElement {
                           alt="qrcode image"
                           width="${this.width}"
                           height="${this.height}"
-<!--                          crossOrigin = "" for cross origin issue -->
                           style="${this.zxingStyle}"/>`:html`<video
                           id="${this.id}"
                           width="${this.width}"
