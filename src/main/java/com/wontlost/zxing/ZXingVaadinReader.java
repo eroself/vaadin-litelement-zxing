@@ -79,6 +79,11 @@ public class ZXingVaadinReader extends CustomField<String> {
         getElement().setProperty("width", width==null ? "100%" : width);
     }
 
+    //If from image, this field should be filled.
+    public void setImageSrc(String imageSrc) {
+        getElement().setProperty("imageSrc", imageSrc);
+    }
+
     public void setReadOnly(boolean readOnly) {
         //do nothing
     }

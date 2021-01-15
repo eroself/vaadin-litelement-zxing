@@ -15,6 +15,7 @@ class VaadinZXingReader extends LitElement {
                  width: String,
                  height: String,
                  from: String,
+                 imageSrc: String,
                  codeReader: Object,
                  excludes: Array,
                  zxingStyle: String,
@@ -41,7 +42,7 @@ class VaadinZXingReader extends LitElement {
     }
 
     getDecoder(from, where) {
-        return from === 'image' ? this.codeReader.decodeFromImage(undefined, where) :
+        return from === 'image' ? this.codeReader.decodeFromImage(where) :
                this.codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
     }
 
@@ -49,44 +50,20 @@ class VaadinZXingReader extends LitElement {
         this.codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
                 this.zxingData = result.text;
-                if(window.changeServer === undefined) {
-                    window.changeServer = this.$server;
-                    this.$server.setZxingData(result.text);
-                }
-
+                this.windowServer(result);
             }
 
-            // if (err) {
-            //     // As long as this error belongs into one of the following categories
-            //     // the code reader is going to continue as excepted. Any other error
-            //     // will stop the decoding loop.
-            //     //
-            //     // Excepted Exceptions:
-            //     //
-            //     //  - NotFoundException
-            //     //  - ChecksumException
-            //     //  - FormatException
-            //
-            //     if (err instanceof Zxing.NotFoundException) {
-            //         console.log('No QR code found.');
-            //         this.$server.setZxingError(err);
-            //     }
-            //
-            //     if (err instanceof Zxing.ChecksumException) {
-            //         console.log('A code was found, but it\'s read value was not valid.')
-            //
-            //     }
-            //
-            //     if (err instanceof Zxing.FormatException) {
-            //         console.log('A code was found, but it was in a invalid format.')
-            //     }
-            // }
-
             if (err && !this.excludes.includes(err.name)) {
-                console.error(err);
                 this.$server.setZxingError(err);
             }
         });
+    }
+
+    windowServer(result) {
+        if(window.changeServer === undefined) {
+            window.changeServer = this.$server;
+            window.changeServer.setZxingData(result.text);
+        }
     }
 
 
@@ -95,12 +72,10 @@ class VaadinZXingReader extends LitElement {
             this.videoDevice(where);
         } else {
             this.getDecoder(from, where).then(result => {
-                console.log(result.text);
                 this.zxingData = result.text;
-                this.$server.setValue(result.text);
+                this.windowServer(result);
             }).catch(err => {
-                console.error(err);
-                this.$server.setError(err);
+                this.$server.setZxingError(err);
             });
         }
     }
@@ -114,11 +89,18 @@ class VaadinZXingReader extends LitElement {
     }
 
     render() {
-        return html`<video
-                      id="${this.id}"
-                      width="${this.width}"
-                      height="${this.height}"
-                      style="${this.zxingStyle}"/>`;
+        return html`${this.from==='image'?html`<img 
+                          id="${this.id}" 
+                          src="${this.imageSrc}"
+                          alt="qrcode image"
+                          width="${this.width}"
+                          height="${this.height}"
+<!--                          crossOrigin = "" for cross origin issue -->
+                          style="${this.zxingStyle}"/>`:html`<video
+                          id="${this.id}"
+                          width="${this.width}"
+                          height="${this.height}"
+                          style="${this.zxingStyle}"/>`}`;
     }
 
 }
