@@ -7,6 +7,10 @@ import com.vaadin.flow.component.dependency.JsModule;
 import java.util.Optional;
 import java.util.Random;
 
+import com.wontlost.zxing.Constants.*;
+
+import javax.validation.constraints.NotNull;
+
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
 public class ZXingVaadinReader extends CustomField<String> {
@@ -79,9 +83,8 @@ public class ZXingVaadinReader extends CustomField<String> {
         getElement().setProperty("width", width==null ? "100%" : width);
     }
 
-    //If from image, this field should be filled.
-    public void setImageSrc(String imageSrc) {
-        getElement().setProperty("imageSrc", imageSrc);
+    public void setSrc(String src) {
+        getElement().setProperty("src", src);
     }
 
     public void setReadOnly(boolean readOnly) {
@@ -102,8 +105,8 @@ public class ZXingVaadinReader extends CustomField<String> {
         getElement().setProperty("zxingStyle", style);
     }
 
-    public void setFrom(String from) {
-        getElement().setProperty("from", from);
+    public void setFrom(@NotNull From from) {
+        getElement().setProperty("from", from.name());
     }
 
 }

@@ -14,7 +14,7 @@ class VaadinZXingReader extends LitElement {
                  width: String,
                  height: String,
                  from: String,
-                 imageSrc: String,
+                 src: String,
                  codeReader: Object,
                  excludes: Array,
                  zxingStyle: String,
@@ -42,7 +42,7 @@ class VaadinZXingReader extends LitElement {
 
     getDecoder(from, where) {
         return from === 'image' ? this.codeReader.decodeFromImage(where) :
-               this.codeReader.decodeFromVideoUrlContinuously(where);//defaulted to video url
+               this.codeReader.decodeFromVideo(where);//defaulted to video url
     }
 
     videoDevice(where){
@@ -80,23 +80,37 @@ class VaadinZXingReader extends LitElement {
         }
     }
 
-    updated(changedProperties) {
+    //if image, only update once
+    firstUpdated(changedProperties) {
         window.changeServer = this.$server;
+        super.firstUpdated(changedProperties);
+        if(this.from === 'image' || this.from === 'video') {
+            console.log("image/video updated")
+            let where = document.querySelector("#"+this.id);
+            this.decode(this.from, where);
+        }
+    }
+
+    updated(changedProperties) {
         super.updated(changedProperties);
-        console.log("updated")
-        let where = document.querySelector("#"+this.id);
-        this.decode(this.from, where);
+        if(this.from === 'camera') {
+            window.changeServer = this.$server;
+            console.log("camera updated")
+            let where = document.querySelector("#"+this.id);
+            this.videoDevice(where);
+        }
     }
 
     render() {
         return html`${this.from==='image'?html`<img 
                           id="${this.id}" 
-                          src="${this.imageSrc}"
+                          src="${this.src}"
                           alt="qrcode image"
                           width="${this.width}"
                           height="${this.height}"
                           style="${this.zxingStyle}"/>`:html`<video
                           id="${this.id}"
+                          src="${this.src}"
                           width="${this.width}"
                           height="${this.height}"
                           style="${this.zxingStyle}"/>`}`;
