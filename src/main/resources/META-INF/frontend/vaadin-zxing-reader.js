@@ -102,8 +102,7 @@ class VaadinZXingReader extends LitElement {
     }
 
     disconnectedCallback() {
-        console.log("disconnectedCallback.....")
-        this.codeReader.reset();
+        this.codeReader.reset();//reset the reader on disconnected.
     }
 
     render() {
