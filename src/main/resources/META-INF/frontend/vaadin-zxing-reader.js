@@ -101,6 +101,11 @@ class VaadinZXingReader extends LitElement {
         }
     }
 
+    disconnectedCallback() {
+        console.log("disconnectedCallback.....")
+        this.codeReader.reset();
+    }
+
     render() {
         return html`${this.from==='image'?html`<img 
                           id="${this.id}" 
