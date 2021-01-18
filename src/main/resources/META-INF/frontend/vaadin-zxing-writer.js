@@ -4,7 +4,7 @@ import * as ZXing from "@zxing/library";
 class VaadinZXingWriter extends LitElement {
 
     static get properties() {
-        return { id: String,
+        return { _id: String,
                  value: String,
                  size: Number
                 };
@@ -16,6 +16,7 @@ class VaadinZXingWriter extends LitElement {
 
     firstUpdated(changedProperties) {
         super.updated(changedProperties);
+        this.id = this._id;
         let codeWriter = new ZXing.BrowserQRCodeSvgWriter();
         codeWriter.writeToDom(this, this.value, this.size, this.size);
     }

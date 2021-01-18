@@ -32,7 +32,7 @@ public class ZXingVaadinWriter extends Component implements HasSize {
     @Override
     public void setId(String id) {
         this.id = id;
-        getElement().setProperty("id", id==null || id.length()==0? "zxing_"+Math.abs(new Random().nextInt()): id);
+        getElement().setProperty("_id", id==null || id.length()==0? "zxing_"+Math.abs(new Random().nextInt()): id);
     }
 
     public String getValue() {
