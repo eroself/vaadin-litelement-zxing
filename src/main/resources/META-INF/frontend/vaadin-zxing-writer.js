@@ -1,5 +1,5 @@
 import { html, LitElement } from "lit-element";
-import { BrowserQRCodeSvgWriter } from '@zxing/browser';
+import * as ZXing from "@zxing/library";
 
 class VaadinZXingWriter extends LitElement {
 
@@ -16,12 +16,8 @@ class VaadinZXingWriter extends LitElement {
 
     firstUpdated(changedProperties) {
         super.updated(changedProperties);
-        let codeWriter = new BrowserQRCodeSvgWriter();
-        codeWriter.writeToDom(document.querySelector("#"+this.id), this.value, this.size, this.size);
-    }
-
-    render() {
-        return html`<div id="${this.id}"></div>`;
+        let codeWriter = new ZXing.BrowserQRCodeSvgWriter();
+        codeWriter.writeToDom(this, this.value, this.size, this.size);
     }
 
 }
