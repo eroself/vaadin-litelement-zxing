@@ -6,20 +6,18 @@ import com.vaadin.flow.component.dependency.JsModule;
 import java.util.Optional;
 import java.util.Random;
 
-@Tag("vaadin-zxing-reader")
-@JsModule("./vaadin-zxing-reader.js")
-public class ZXingVaadinWriter extends Component implements HasSize, HasStyle{
+@Tag("vaadin-zxing-writer")
+@JsModule("./vaadin-zxing-writer.js")
+public class ZXingVaadinWriter extends Component implements HasSize {
 
     private String value;
-
-    private String zxingStyle;
 
     private Integer size;
 
     private String id;
 
     public ZXingVaadinWriter() {
-        this("zxing-reader");
+        this("zxing-writer");
     }
 
     public ZXingVaadinWriter(String id) {
@@ -41,9 +39,9 @@ public class ZXingVaadinWriter extends Component implements HasSize, HasStyle{
         return value;
     }
 
-    @ClientCallable
-    private void setValue(String value) {
+    public void setValue(String value) {
         this.value = value;
+        getElement().setProperty("value", value);
     }
 
     public Integer getSize() {
@@ -53,15 +51,6 @@ public class ZXingVaadinWriter extends Component implements HasSize, HasStyle{
     public void setSize(Integer size) {
         this.size = size;
         getElement().setProperty("size", size==null? Integer.valueOf(100): size);
-    }
-
-    public String getZxingStyle() {
-        return zxingStyle;
-    }
-
-    public void setZxingStyle(String zxingStyle) {
-        this.zxingStyle = zxingStyle;
-        getElement().setProperty("zxingStyle", zxingStyle);
     }
 
 }
