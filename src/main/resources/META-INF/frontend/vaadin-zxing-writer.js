@@ -1,4 +1,4 @@
-import { html, LitElement } from "lit-element";
+import { LitElement } from "lit-element";
 import * as ZXing from "@zxing/library";
 
 class VaadinZXingWriter extends LitElement {
