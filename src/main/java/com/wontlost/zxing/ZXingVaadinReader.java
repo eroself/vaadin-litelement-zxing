@@ -21,10 +21,16 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     private String id;
 
+    /**
+     * id will be override to 'video' if set From.camera
+     */
     public ZXingVaadinReader() {
         this("zxing-reader");
     }
 
+    /**
+     * id will be override to 'video' if set From.camera
+     */
     public ZXingVaadinReader(String id) {
         setId(id);
     }
@@ -91,6 +97,10 @@ public class ZXingVaadinReader extends CustomField<String> {
         //do nothing
     }
 
+    /**
+     * Make component readonly always
+     * @return true
+     */
     public boolean isReadOnly() {
         return true;
     }
@@ -107,6 +117,9 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     public void setFrom(@NotNull From from) {
         getElement().setProperty("from", from.name());
+        if(From.camera.equals(from)) { //id needs to be 'video'
+            this.setId("video");
+        }
     }
 
 }
