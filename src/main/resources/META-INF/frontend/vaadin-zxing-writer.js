@@ -1,5 +1,5 @@
 import { LitElement } from "lit-element";
-import * as ZXing from "@zxing/library";
+import * as ZXingBrowser from "@zxing/browser";
 
 class VaadinZXingWriter extends LitElement {
 
@@ -17,7 +17,7 @@ class VaadinZXingWriter extends LitElement {
     firstUpdated(changedProperties) {
         super.updated(changedProperties);
         this.id = this._id;
-        let codeWriter = new ZXing.BrowserQRCodeSvgWriter();
+        let codeWriter = new ZXingBrowser.BrowserQRCodeSvgWriter();
         codeWriter.writeToDom(this, this.value, this.size, this.size);
     }
 

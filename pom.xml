@@ -5,16 +5,16 @@
 
     <groupId>com.wontlost</groupId>
     <artifactId>zxing-vaadin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>ZXingVaadin</name>
     <description>ZXing for Vaadin 14</description>
     <scm>
-        <url>https://github.com/eroself/vaadin-litelement-webcam</url>
-        <connection>scm:git:git://https://github.com/eroself/vaadin-litelement-webcam.git</connection>
-        <developerConnection>scm:git:git@https://github.com/eroself/vaadin-litelement-webcam.git</developerConnection>
+        <url>https://github.com/eroself/vaadin-litelement-zxing</url>
+        <connection>scm:git:git://https://github.com/eroself/vaadin-litelement-zxing.git</connection>
+        <developerConnection>scm:git:git@https://github.com/eroself/vaadin-litelement-zxing.git</developerConnection>
     </scm>
     <properties>
-        <vaadin.version>14.4.6</vaadin.version>
+        <vaadin.version>14.5.2</vaadin.version>
         <vaadin-applayout-addon.version>4.0.0.rc5</vaadin-applayout-addon.version>
 
         <maven.compiler.source>11</maven.compiler.source>
@@ -27,12 +27,12 @@
         <jetty.version>9.4.27.v20200227</jetty.version>
     </properties>
     <organization>
-        <name>WontLost</name>
+        <name>WontLost Ltd</name>
     </organization>
     <licenses>
         <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
