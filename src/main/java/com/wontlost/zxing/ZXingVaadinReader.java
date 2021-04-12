@@ -7,12 +7,14 @@ import com.vaadin.flow.component.dependency.JsModule;
 import java.util.Optional;
 import java.util.Random;
 
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.wontlost.zxing.Constants.*;
 
 import javax.validation.constraints.NotNull;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
+@NpmPackage(value = "@zxing/library", version="^0.18.4")
 public class ZXingVaadinReader extends CustomField<String> {
 
     private String zxingData;

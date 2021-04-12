@@ -2,12 +2,14 @@ package com.wontlost.zxing;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
 
 import java.util.Optional;
 import java.util.Random;
 
 @Tag("vaadin-zxing-writer")
 @JsModule("./vaadin-zxing-writer.js")
+@NpmPackage(value = "@zxing/browser", version = "^0.0.8")
 public class ZXingVaadinWriter extends Component implements HasSize {
 
     private String value;

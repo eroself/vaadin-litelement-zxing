@@ -5,7 +5,7 @@
 
     <groupId>com.wontlost</groupId>
     <artifactId>zxing-vaadin</artifactId>
-    <version>1.0.0-8</version>
+    <version>1.0.2-8</version>
     <name>ZXingVaadin</name>
     <description>ZXing for Vaadin 14</description>
     <scm>
