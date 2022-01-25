@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
-@NpmPackage(value = "@zxing/library", version = "0.18.4")
+@NpmPackage(value = "@zxing/library", version = "0.18.5")
 public class ZXingVaadinReader extends CustomField<String> {
 
     private String zxingData;
@@ -22,6 +22,8 @@ public class ZXingVaadinReader extends CustomField<String> {
     private String zxingError;
 
     private String id;
+
+    private final Random random = new Random();
 
     /**
      * id will be override to 'video' if set From.camera
@@ -34,7 +36,11 @@ public class ZXingVaadinReader extends CustomField<String> {
      * id will be override to 'video' if set From.camera
      */
     public ZXingVaadinReader(String id) {
-        setId(id);
+        if(id.length() == 0) {
+            setId("zxing-reader");
+        } else {
+            setId(id);
+        }
     }
 
     @Override
@@ -55,7 +61,7 @@ public class ZXingVaadinReader extends CustomField<String> {
     @Override
     public void setId(String id) {
         this.id = id;
-        getElement().setProperty("id", id==null || id.length()==0? "zxing_"+Math.abs(new Random().nextInt()): id);
+        getElement().setProperty("id", Optional.ofNullable(id).orElse( "zxing_"+Math.abs(random.nextInt(20480))));
     }
 
     public String getValue() {
@@ -83,6 +89,10 @@ public class ZXingVaadinReader extends CustomField<String> {
     @ClientCallable
     private void setZxingError(String error) {
         this.zxingError = error;
+    }
+
+    public void reset() {
+        getElement().callJsFunction("reset");
     }
 
     @Override

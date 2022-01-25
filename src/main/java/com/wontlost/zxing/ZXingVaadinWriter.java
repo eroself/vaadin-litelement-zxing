@@ -9,7 +9,7 @@ import java.util.Random;
 
 @Tag("vaadin-zxing-writer")
 @JsModule("./vaadin-zxing-writer.js")
-@NpmPackage(value = "@zxing/browser", version = "0.0.8")
+@NpmPackage(value = "@zxing/browser", version = "0.0.10")
 public class ZXingVaadinWriter extends Component implements HasSize {
 
     private String value;
@@ -18,12 +18,18 @@ public class ZXingVaadinWriter extends Component implements HasSize {
 
     private String id;
 
+    private final Random random = new Random();
+
     public ZXingVaadinWriter() {
         this("zxing-writer");
     }
 
     public ZXingVaadinWriter(String id) {
-        setId(id);
+        if(id.length()==0) {
+            setId("zxing-writer");
+        }else{
+            setId(id);
+        }
     }
 
     @Override
@@ -34,7 +40,7 @@ public class ZXingVaadinWriter extends Component implements HasSize {
     @Override
     public void setId(String id) {
         this.id = id;
-        getElement().setProperty("_id", id==null || id.length()==0? "zxing_"+Math.abs(new Random().nextInt()): id);
+        getElement().setProperty("_id", Optional.ofNullable(id).orElse( "zxing_"+Math.abs(random.nextInt(20480))));
     }
 
     public String getValue() {

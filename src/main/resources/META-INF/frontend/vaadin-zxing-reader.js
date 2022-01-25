@@ -48,7 +48,7 @@ class VaadinZXingReader extends LitElement {
     videoDevice(where){
         this.codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
-                this.zxingData = result.text;
+                this.zxingData = result.getText();
                 this.windowServer(result);
             }
 
@@ -56,12 +56,19 @@ class VaadinZXingReader extends LitElement {
                 this.$server.setZxingError(err);
             }
         });
+        // this.codeReader.decodeOnceFromVideoDevice(undefined, where).then(
+        //     result => {
+        //         this.zxingData = result.getText();
+        //         this.windowServer(result);
+        //     }, reason => {
+        //         this.$server.setZxingError(reason);
+        //     });
     }
 
     windowServer(result) {
         if(window.changeServer === undefined) {
             window.changeServer = this.$server;
-            window.changeServer.setZxingData(result.text);
+            window.changeServer.setZxingData(result.getText());
         }
     }
 
@@ -71,7 +78,7 @@ class VaadinZXingReader extends LitElement {
             this.videoDevice(where);
         } else {
             this.getDecoder(from, where).then(result => {
-                this.zxingData = result.text;
+                this.zxingData = result.getText();
                 console.log("***************"+this.zxingData);
                 this.windowServer(result);
             }).catch(err => {
@@ -89,6 +96,13 @@ class VaadinZXingReader extends LitElement {
             let where = document.querySelector("#"+this.id);
             this.decode(this.from, where);
         }
+    }
+
+    reset() {
+        this.codeReader.reset();
+        window.changeServer = undefined;
+        this.decode(this.from, document.querySelector("#"+this.id));
+        console.log("reader reset");
     }
 
     updated(changedProperties) {
