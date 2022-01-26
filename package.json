@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@polymer/polymer": "3.2.0",
+    "@polymer/polymer": "3.4.1",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "@zxing/library": "^0.18.5",
     "construct-style-sheets-polyfill": "3.0.4",
