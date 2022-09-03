@@ -82,6 +82,7 @@ class VaadinZXingReader extends LitElement {
                 console.log("***************"+this.zxingData);
                 this.windowServer(result);
             }).catch(err => {
+                console.log("error:"+err);
                 this.$server.setZxingError(err);
             });
         }

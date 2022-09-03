@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
-@NpmPackage(value = "@zxing/library", version = "0.18.5")
+@NpmPackage(value = "@zxing/library", version = "^0.19.1")
 public class ZXingVaadinReader extends CustomField<String> {
 
     private String zxingData;
@@ -132,6 +132,10 @@ public class ZXingVaadinReader extends CustomField<String> {
         if(From.camera.equals(from)) { //id needs to be 'video'
             this.setId("video");
         }
+    }
+
+    public String getZxingError() {
+        return this.zxingError;
     }
 
 }
