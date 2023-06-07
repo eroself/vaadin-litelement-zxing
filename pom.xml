@@ -5,7 +5,7 @@
 
     <groupId>com.wontlost</groupId>
     <artifactId>zxing-vaadin</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <name>ZXingVaadin</name>
     <packaging>jar</packaging>
     <description>ZXing for Vaadin</description>
@@ -15,7 +15,7 @@
         <developerConnection>scm:git:git@https://github.com/eroself/vaadin-litelement-zxing.git</developerConnection>
     </scm>
     <properties>
-        <vaadin.version>23.1.7</vaadin.version>
+        <vaadin.version>23.3.5</vaadin.version>
         <vaadin-applayout-addon.version>4.0.0.rc5</vaadin-applayout-addon.version>
 
         <maven.compiler.source>17</maven.compiler.source>

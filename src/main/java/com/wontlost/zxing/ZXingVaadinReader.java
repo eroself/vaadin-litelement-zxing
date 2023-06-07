@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
-@NpmPackage(value = "@zxing/library", version = "^0.19.1")
+@NpmPackage(value = "@zxing/library", version = "^0.20.0")
 public class ZXingVaadinReader extends CustomField<String> {
 
     private String zxingData;
@@ -25,22 +25,13 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     private final Random random = new Random();
 
-    /**
-     * id will be override to 'video' if set From.camera
-     */
     public ZXingVaadinReader() {
-        this("zxing-reader");
+        this(null);
     }
 
-    /**
-     * id will be override to 'video' if set From.camera
-     */
+
     public ZXingVaadinReader(String id) {
-        if(id.length() == 0) {
-            setId("zxing-reader");
-        } else {
-            setId(id);
-        }
+        setId(id);
     }
 
     @Override
@@ -60,8 +51,11 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     @Override
     public void setId(String id) {
+        if(id == null || id.trim().length()==0) {
+            id = "zxing_"+Math.abs(random.nextInt(20480));
+        }
         this.id = id;
-        getElement().setProperty("id", Optional.ofNullable(id).orElse( "zxing_"+Math.abs(random.nextInt(20480))));
+        getElement().setProperty("id", id);
     }
 
     public String getValue() {
@@ -129,9 +123,9 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     public void setFrom(@NotNull From from) {
         getElement().setProperty("from", from.name());
-        if(From.camera.equals(from)) { //id needs to be 'video'
-            this.setId("video");
-        }
+        //if(From.camera.equals(from)) { //id needs to be 'video'
+        //    this.setId("video");
+        //}
     }
 
     public String getZxingError() {

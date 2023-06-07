@@ -1,4 +1,4 @@
-import { html, LitElement } from "lit-element";
+import { html, LitElement } from "lit";
 import * as ZXing from "@zxing/library";
 
 class VaadinZXingReader extends LitElement {
@@ -48,7 +48,7 @@ class VaadinZXingReader extends LitElement {
     videoDevice(where){
         this.codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
-                this.zxingData = result.getText();
+                this.zxingData = result.text;
                 this.windowServer(result);
             }
 
@@ -68,7 +68,7 @@ class VaadinZXingReader extends LitElement {
     windowServer(result) {
         if(window.changeServer === undefined) {
             window.changeServer = this.$server;
-            window.changeServer.setZxingData(result.getText());
+            window.changeServer.setZxingData(result.text);
         }
     }
 
@@ -78,7 +78,7 @@ class VaadinZXingReader extends LitElement {
             this.videoDevice(where);
         } else {
             this.getDecoder(from, where).then(result => {
-                this.zxingData = result.getText();
+                this.zxingData = result.text;
                 console.log("***************"+this.zxingData);
                 this.windowServer(result);
             }).catch(err => {
@@ -94,7 +94,7 @@ class VaadinZXingReader extends LitElement {
         super.firstUpdated(changedProperties);
         if(this.from === 'image' || this.from === 'video') {
             console.log("image/video updated")
-            let where = document.querySelector("#"+this.id);
+            let where = this.querySelector("#"+this.id);
             this.decode(this.from, where);
         }
     }
@@ -102,7 +102,7 @@ class VaadinZXingReader extends LitElement {
     reset() {
         this.codeReader.reset();
         window.changeServer = undefined;
-        this.decode(this.from, document.querySelector("#"+this.id));
+        this.decode(this.from, this.querySelector("#"+this.id));
         console.log("reader reset");
     }
 
@@ -111,7 +111,7 @@ class VaadinZXingReader extends LitElement {
         if(this.from === 'camera') {
             window.changeServer = this.$server;
             console.log("camera updated")
-            let where = document.querySelector("#"+this.id);
+            let where = this.querySelector("#"+this.id);
             this.videoDevice(where);
         }
     }
