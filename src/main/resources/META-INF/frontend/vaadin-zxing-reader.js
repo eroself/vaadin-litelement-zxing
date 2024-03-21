@@ -42,7 +42,7 @@ class VaadinZXingReader extends LitElement {
 
     getDecoder(from, where) {
         return from === 'image' ? this.codeReader.decodeFromImage(where) :
-               this.codeReader.decodeFromVideo(where);//defaulted to video url
+            this.codeReader.decodeFromVideo(where);//defaulted to video url
     }
 
     videoDevice(where){
@@ -52,17 +52,15 @@ class VaadinZXingReader extends LitElement {
                 this.windowServer(result);
             }
 
-            if (err && !this.excludes.includes(err.name)) {
-                this.$server.setZxingError(err);
+            // check that the err.name starts with the excluded exceptions. Fixes https://github.com/eroself/vaadin-litelement-zxing/issues/20
+            if (err && !this.excludes.some((element) => err.name.startsWith(element))) {
+                console.warn(err);
+                this.$server.setZxingError(err.name, err.message);
             }
+        }).then(result => {}, reason => {
+            console.warn(reason);
+            this.$server.setZxingError(reason.name, reason.message);
         });
-        // this.codeReader.decodeOnceFromVideoDevice(undefined, where).then(
-        //     result => {
-        //         this.zxingData = result.getText();
-        //         this.windowServer(result);
-        //     }, reason => {
-        //         this.$server.setZxingError(reason);
-        //     });
     }
 
     windowServer(result) {
