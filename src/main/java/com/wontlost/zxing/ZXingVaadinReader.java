@@ -12,8 +12,6 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.wontlost.zxing.Constants.*;
 
-import javax.validation.constraints.NotNull;
-
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
 @NpmPackage(value = "@zxing/library", version = "^0.20.0")
