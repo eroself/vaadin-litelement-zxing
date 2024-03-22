@@ -5,7 +5,13 @@ class VaadinZXingReader extends LitElement {
 
     constructor() {
         super();
-        this.excludes = ['NotFoundException', 'ChecksumException', 'FormatException'];
+        // ZXing will throw "NotFoundException2: No MultiFormat Readers were able to detect the code." for
+        // every frame where there's no QR code. We have to ignore those exceptions in order to not to spam server-side.
+        // I'm also frequently getting "DOMException: IndexSizeError : Index or size is negative or greater than the allowed amount",
+        // let's also ignore those. See https://github.com/eroself/vaadin-litelement-zxing/issues/20 for more details.
+        this.excludes = ['NotFoundException', 'ChecksumException', 'FormatException', 'IndexSizeError'];
+        // fix for https://github.com/eroself/vaadin-litelement-zxing/issues/20
+        this.excludeMessages = ['No MultiFormat Readers were able to detect the code.'];
         this.codeReader = new ZXing.BrowserMultiFormatReader();
     }
 
@@ -17,6 +23,7 @@ class VaadinZXingReader extends LitElement {
                  src: String,
                  codeReader: Object,
                  excludes: Array,
+            excludeMessages: Array,
                  zxingStyle: String,
                  zxingData:{
                      type: String,
@@ -45,21 +52,25 @@ class VaadinZXingReader extends LitElement {
             this.codeReader.decodeFromVideo(where);//defaulted to video url
     }
 
-    videoDevice(where){
+    maybeHandleVideoError(err) {
+        // check that the err.name starts with the excluded exceptions. Fixes https://github.com/eroself/vaadin-litelement-zxing/issues/20
+        if (err && !this.excludes.some((element) => err.name.startsWith(element)) && !this.excludeMessages.includes(err.message)) {
+            console.error("Caught video error: ", err.name, ": ", err.message);
+            console.error(err);
+            this.$server.setZxingError(err.name, err.message);
+        }
+    }
+
+    videoDevice(where) {
         this.codeReader.decodeFromVideoDevice(undefined, where, (result, err) => {
             if (result) {
                 this.zxingData = result.text;
                 this.windowServer(result);
-            }
-
-            // check that the err.name starts with the excluded exceptions. Fixes https://github.com/eroself/vaadin-litelement-zxing/issues/20
-            if (err && !this.excludes.some((element) => err.name.startsWith(element))) {
-                console.warn(err);
-                this.$server.setZxingError(err.name, err.message);
+            } else {
+                this.maybeHandleVideoError(err);
             }
         }).then(result => {}, reason => {
-            console.warn(reason);
-            this.$server.setZxingError(reason.name, reason.message);
+            this.maybeHandleVideoError(reason);
         });
     }
 
