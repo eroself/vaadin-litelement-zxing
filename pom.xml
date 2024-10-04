@@ -15,7 +15,7 @@
         <developerConnection>scm:git:git@https://github.com/eroself/vaadin-litelement-zxing.git</developerConnection>
     </scm>
     <properties>
-        <vaadin.version>23.3.5</vaadin.version>
+        <vaadin.version>24.0.0</vaadin.version>
         <vaadin-applayout-addon.version>4.0.0.rc5</vaadin-applayout-addon.version>
 
         <maven.compiler.source>17</maven.compiler.source>
