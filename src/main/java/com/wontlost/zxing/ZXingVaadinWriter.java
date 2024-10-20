@@ -9,7 +9,7 @@ import java.util.Random;
 
 @Tag("vaadin-zxing-writer")
 @JsModule("./vaadin-zxing-writer.js")
-@NpmPackage(value = "@zxing/browser", version = "^0.1.3")
+@NpmPackage(value = "@zxing/browser", version = "^0.1.5")
 public class ZXingVaadinWriter extends Component implements HasSize {
 
     private String value;
