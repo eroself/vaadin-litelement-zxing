@@ -5,10 +5,12 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.dependency.JsModule;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.Random;
 
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.function.SerializableConsumer;
 import com.wontlost.zxing.Constants.*;
 
 @Tag("vaadin-zxing-reader")
@@ -18,7 +20,14 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     private String zxingData;
 
-    private String zxingError;
+    private DOMError zxingError;
+
+    /**
+     * Invoked whenever ZXing reports an error. You must assume that the video stream has stopped;
+     * the best thing is to show an appropriate error notification to the user and possibly
+     * restart the streaming via {@link #reset()}.
+     */
+    public SerializableConsumer<DOMError> onZxingErrorListener = e -> {};
 
     private String id;
 
@@ -79,11 +88,34 @@ public class ZXingVaadinReader extends CustomField<String> {
         setModelValue(zxingData, true);
     }
 
-    @ClientCallable
-    private void setZxingError(String error) {
-        this.zxingError = error;
+    public static class DOMError implements Serializable {
+        /**
+         * This is NotAllowedError if the access is rejected by the user. For other names, please check
+         * <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">getUserMedia()</a>
+         */
+        public final String name;
+        public final String message;
+
+        public DOMError(String name, String message) {
+            this.name = name;
+            this.message = message;
+        }
+
+        @Override
+        public String toString() {
+            return "DOMError{" + name + ": " + message + "}";
+        }
     }
 
+    @ClientCallable
+    private void setZxingError(String type, String message) {
+        this.zxingError = new DOMError(type, message);
+        onZxingErrorListener.accept(zxingError);
+    }
+
+    /**
+     * Restarts the decoding process.
+     */
     public void reset() {
         getElement().callJsFunction("reset");
     }
@@ -120,12 +152,11 @@ public class ZXingVaadinReader extends CustomField<String> {
         getElement().setProperty("zxingStyle", style);
     }
 
-    public void setFrom(@NotNull From from) {
+    public void setFrom(From from) {
         getElement().setProperty("from", from.name());
     }
 
-    public String getZxingError() {
+    public DOMError getZxingError() {
         return this.zxingError;
     }
-
 }

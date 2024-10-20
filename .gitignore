@@ -1,5 +1,4 @@
-/node_modules/
-/target/
-/.idea/
-/.github/
+node_modules/
+target/
+.idea
 .DS_Store
