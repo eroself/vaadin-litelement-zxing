@@ -12,6 +12,7 @@ import java.util.Random;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.wontlost.zxing.Constants.*;
+import org.w3c.dom.DOMError;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
@@ -89,16 +90,24 @@ public class ZXingVaadinReader extends CustomField<String> {
         setModelValue(zxingData, true);
     }
 
-    /**
-     * @param name This is NotAllowedError if the access is rejected by the user. For other names, please check
-     *             <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">getUserMedia()</a>
-     */
-    public record DOMError(String name, String message) implements Serializable {
-        @Override
-            public String toString() {
-                return "DOMError{" + name + ": " + message + "}";
-            }
+    public static class DOMError implements Serializable {
+        /**
+         * This is NotAllowedError if the access is rejected by the user. For other names, please check
+         * <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">getUserMedia()</a>
+         */
+        public final String name;
+        public final String message;
+
+        public DOMError(String name, String message) {
+            this.name = name;
+            this.message = message;
         }
+
+        @Override
+        public String toString() {
+            return "DOMError{" + name + ": " + message + "}";
+        }
+    }
 
     @ClientCallable
     private void setZxingError(String type, String message) {
