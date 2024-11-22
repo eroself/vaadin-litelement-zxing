@@ -1,8 +1,8 @@
 package com.wontlost.zxing;
 
-import com.github.javaparser.quality.NotNull;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.customfield.CustomField;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 
 import java.io.Serializable;
@@ -15,6 +15,7 @@ import com.wontlost.zxing.Constants.*;
 
 @Tag("vaadin-zxing-reader")
 @JsModule("./vaadin-zxing-reader.js")
+@CssImport("./vaadin-zxing.css")
 @NpmPackage(value = "@zxing/library", version = "^0.21.3")
 public class ZXingVaadinReader extends CustomField<String> {
 
@@ -59,7 +60,7 @@ public class ZXingVaadinReader extends CustomField<String> {
 
     @Override
     public void setId(String id) {
-        if(id == null || id.trim().length()==0) {
+        if(id == null || id.trim().isEmpty()) {
             id = "zxing_"+Math.abs(random.nextInt(20480));
         }
         this.id = id;
@@ -88,24 +89,16 @@ public class ZXingVaadinReader extends CustomField<String> {
         setModelValue(zxingData, true);
     }
 
-    public static class DOMError implements Serializable {
-        /**
-         * This is NotAllowedError if the access is rejected by the user. For other names, please check
-         * <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">getUserMedia()</a>
-         */
-        public final String name;
-        public final String message;
-
-        public DOMError(String name, String message) {
-            this.name = name;
-            this.message = message;
-        }
-
+    /**
+     * @param name This is NotAllowedError if the access is rejected by the user. For other names, please check
+     *             <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">getUserMedia()</a>
+     */
+    public record DOMError(String name, String message) implements Serializable {
         @Override
-        public String toString() {
-            return "DOMError{" + name + ": " + message + "}";
+            public String toString() {
+                return "DOMError{" + name + ": " + message + "}";
+            }
         }
-    }
 
     @ClientCallable
     private void setZxingError(String type, String message) {

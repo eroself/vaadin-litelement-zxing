@@ -5,7 +5,7 @@
 
     <groupId>com.wontlost</groupId>
     <artifactId>zxing-vaadin</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <name>ZXingVaadin</name>
     <packaging>jar</packaging>
     <description>ZXing for Vaadin</description>
@@ -108,7 +108,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <index>true</index>
@@ -120,6 +120,9 @@
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
                         </manifestEntries>
                     </archive>
+                    <excludes>
+                        <exclude>META-INF/VAADIN/config/flow-build-info.json</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -135,7 +138,14 @@
                     </supportedPackagings>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

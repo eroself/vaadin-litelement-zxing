@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@techstark/opencv-js": "^4.10.0-release.1",
+    "@zxing/library": "^0.21.3"
+  }
+}
